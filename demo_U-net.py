@@ -82,15 +82,11 @@ for ep in range(epoch):
     total_loss = 0
     counter = 0
     start = time.time()
-    while True:
-        try:
-            _, loss = sess.run([unet.training, unet.loss])
+    for _ in range(math.ceil(data_size/batch_size)):
+        _, loss = sess.run([unet.training, unet.loss])
             
-            total_loss += loss
-            counter += 1
-            
-        except:
-            break
+        total_loss += loss
+        counter += 1
     end = time.time()
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
     print(message.format(ep, total_loss/counter, end-start))
