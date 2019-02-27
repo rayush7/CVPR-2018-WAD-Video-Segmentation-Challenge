@@ -73,10 +73,9 @@ def decrease_dropout():
     # decrease dropout rate
     pass
 
-def entropy_loss(x, t):
-    loss = tf.nn.softmax_cross_entropy_with_logits(labels=t, logits=x)
-    batch_size = loss.get_shape().as_list()[0]
-    return tf.reduce_sum(loss) / batch_size
+def entropy_loss(y, t):
+    loss = tf.nn.softmax_cross_entropy_with_logits(labels=t, logits=y)
+    return tf.reduce_mean(loss)
 
 def mean_square_loss(x, t):
     batch_size, input_dim = x.get_shape().as_list()
