@@ -27,6 +27,7 @@ img_width  = 422
 down_scale = 8
 class_num  = 9
 data_size  = len(x_train_name)
+n_batches  = int(math.ceil(data_size/batch_size))
 
 
 # This cell is used to construct the pipeline of dataset
@@ -80,16 +81,13 @@ elif not os.path.isdir('./Models/U-Net/'):
     
 for ep in range(epoch):
     total_loss = 0
-    counter = 0
     start = time.time()
-    for _ in range(math.ceil(data_size/batch_size)):
+    for _ in range(n_batches):
         _, loss = sess.run([unet.training, unet.loss])
-            
         total_loss += loss
-        counter += 1
     end = time.time()
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
-    print(message.format(ep, total_loss/counter, end-start))
+    print(message.format(ep, total_loss/n_batches, end-start))
     
     if not os.path.isdir('./Models/U-Net/unet-'+str(ep)):
         os.mkdir('./Models/U-Net/unet-'+str(ep))
@@ -98,5 +96,5 @@ for ep in range(epoch):
     if ep==0 and os.path.isfile('./log'):
         os.remove('./log')
     with open('./log', 'a') as file_write:
-        file_write.write(message.format(ep, total_loss/counter, end-start))
+        file_write.write(message.format(ep, total_loss/n_batches, end-start))
         file_write.write('\n')
