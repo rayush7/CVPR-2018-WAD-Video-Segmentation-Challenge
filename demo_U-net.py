@@ -19,8 +19,8 @@ t_train_name.sort()
 t_train_name = t_train_name[0:10]
 
 # parameters
-batch_size = 1 # 32
-epoch      = 1 # 30
+batch_size = 32
+epoch      = 30
 LR         = 1e-4
 img_height = 90
 img_width  = 422
@@ -36,7 +36,7 @@ def _parse_function(x_name, t_name, img_shape, down_scale):
     x = x[1560:2280, 7:-7]/1000
     x = tf.image.resize_images(x, img_shape)
     t_string = tf.read_file(t_name)
-    t = tf.image.decode_image(t_string, channels=1, dtype=tf.uint16)
+    t = tf.image.decode_png(t_string, channels=1, dtype=tf.uint16)
     t = t[1560:2280, 7:-7]
     t = t[::down_scale, ::down_scale]
     t = tf.cast(t/1000, tf.int32)
