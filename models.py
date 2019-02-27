@@ -51,7 +51,7 @@ class UNet(object):
         return h21
     
     def optimize(self, loss):
-        shape = tf.shape(y) # [batch_size, height, width, class]
+        shape = tf.shape(self.y) # [batch_size, height, width, class]
         self.y = tf.reshape(self.y, [shape[0]*shape[1]*shape[2], shape[3]])
         self.t = tf.reshape(self.t, [shape[0]*shape[1]*shape[2], shape[3]])
         
