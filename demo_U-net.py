@@ -13,10 +13,8 @@ x_train_name = os.listdir(x_train_path)
 t_train_name = os.listdir(t_train_path)
 x_train_name = [x_train_path+s for s in x_train_name]
 x_train_name.sort()
-x_train_name = x_train_name[0:10]
 t_train_name = [t_train_path+s for s in t_train_name]
 t_train_name.sort()
-t_train_name = t_train_name[0:10]
 
 # parameters
 batch_size = 32
