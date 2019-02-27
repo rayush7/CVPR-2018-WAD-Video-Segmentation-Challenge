@@ -2,3 +2,5 @@ Dataset
 .ipynb_checkpoints
 __pycache__
 Models
+*.pyc
+**/*.pyc

@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import os
 import math
 import time
-%matplotlib inline
 
 x_train_path = './Dataset/sample_train_color/'
 t_train_path = './Dataset/sample_train_label/'

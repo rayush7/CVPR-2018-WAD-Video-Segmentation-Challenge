@@ -1,43 +1,8 @@
-from skimage.external import tifffile
-from skimage import img_as_float32
-
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 import math
 import pdb
-
-def read_EM(path):
-    x_train = tifffile.imread(path + 'train-volume.tif')
-    x_train = img_as_float32(x_train)
-    t_train = tifffile.imread(path + 'train-labels.tif')
-    t_train = img_as_float32(t_train)
-    x_test = tifffile.imread(path + 'test-volume.tif')
-    x_test = img_as_float32(x_test)
-    return x_train, t_train, x_test
-
-def EM_image_cut(img, cut_length):
-    img_num, length = img.shape[0:2]
-    
-    cut_num = math.floor(length/cut_length)
-    crop_img = []
-    for img_ in img:
-        for idx in range(cut_num):
-            for jdx in range(cut_num):
-                crop_img += [img_[idx*cut_length:(idx+1)*cut_length, jdx*cut_length:(jdx+1)*cut_length]]
-    return np.stack(crop_img, axis=0)  
-
-def image_crop(img, width_crop, height_crop):
-    img_num, height, width = img.shape
-    crop_img = []
-    
-    width_cut_num = math.floor(width/width_crop)
-    height_cut_num = math.floor(height/height_crop)
-    for img_ in img:
-        for idx in range(width_cut_num):
-            for jdx in range(height_cut_num):
-                crop_img += [img_[jdx*height_crop:(jdx+1)*height_crop, idx*width_crop:(idx+1)*width_crop]]
-    return np.stack(crop_img, axis=0)
 
 def increase_batch(start, bound, rate=1e-4):
     # increase batch size
