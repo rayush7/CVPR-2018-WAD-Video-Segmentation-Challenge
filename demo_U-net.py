@@ -72,6 +72,13 @@ sess.run(tf.global_variables_initializer())
 sess.run(iterator.initializer)
 
 
+saver = tf.train.Saver(max_to_keep=epoch)
+if not os.path.isdir('./Models'):
+    os.mkdir('./Models')
+    os.mkdir('./Models/U-Net/')
+elif not os.path.isdir('./Models/U-Net/'):
+    os.mkdir('./Models/U-Net/')
+    
 for ep in range(epoch):
     total_loss = 0
     counter = 0
@@ -88,3 +95,13 @@ for ep in range(epoch):
     end = time.time()
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
     print(message.format(ep, total_loss/counter, end-start))
+    
+    if not os.path.isdir('./Models/U-Net/unet-'+str(ep)):
+        os.mkdir('./Models/U-Net/unet-'+str(ep))
+    save_path = saver.save(sess, './Models/U-Net/unet-'+str(ep)+'/unet.ckpt')
+    
+    if ep==0 and os.path.isfile('./log'):
+        os.remove('./log')
+    with open('./log', 'a') as file_write:
+        file_write.write(message.format(ep, total_loss/counter, end-start))
+        file_write.write('\n')
