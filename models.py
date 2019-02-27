@@ -51,6 +51,10 @@ class UNet(object):
         return h21
     
     def optimize(self, loss):
+        shape = tf.shape(y) # [batch_size, height, width, class]
+        self.y = tf.reshape(self.y, [shape[0]*shape[1]*shape[2], shape[3]])
+        self.t = tf.reshape(self.t, [shape[0]*shape[1]*shape[2], shape[3]])
+        
         self.loss = loss(self.y, self.t)
         self.training = tf.train.AdamOptimizer(self.LR).minimize(self.loss)
 
