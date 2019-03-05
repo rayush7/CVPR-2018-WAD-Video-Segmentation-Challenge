@@ -26,6 +26,7 @@ def create_sample_train_val_dataset(parent_folder_path,path_train_video_folder,n
 	for v_id in range(num_video):
 
 		video_name = os.path.join(path_train_video_folder,str(video_list[v_id]))
+		print('Video_Name:',video_name)
 		frame_df = pd.read_csv(video_name,header=None,delimiter= ' ',names=col_names)
 
 		num_frame = frame_df.shape[0]
@@ -33,12 +34,12 @@ def create_sample_train_val_dataset(parent_folder_path,path_train_video_folder,n
 		for frame_id in range(num_frame):
 			frame_name = str(frame_df['image_name'][frame_id])
 			frame_name = frame_name[2:31]
-			print(frame_name)
+			#print(frame_name)
 
 
 			frame_label = str(frame_df['image_label_name'][frame_id])
 			frame_label = frame_label[2:]
-			print(frame_label)
+			#print(frame_label)
 
 			current_split = (frame_id+1)/num_frame
 			#print(current_split)
@@ -58,15 +59,15 @@ def create_sample_train_val_dataset(parent_folder_path,path_train_video_folder,n
 		#print(len(val_image_list))
 
 
-		sample_train_df['image_path'] = pd.Series(train_image_list)
-		sample_train_df['image_label_instance'] = pd.Series(train_label_list)
+	sample_train_df['image_path'] = pd.Series(train_image_list)
+	sample_train_df['image_label_instance'] = pd.Series(train_label_list)
 
-		sample_val_df['image_path'] = pd.Series(val_image_list)
-		sample_val_df['image_label_instance'] = pd.Series(val_label_list)
+	sample_val_df['image_path'] = pd.Series(val_image_list)
+	sample_val_df['image_label_instance'] = pd.Series(val_label_list)
 
 
-		sample_train_df.to_csv('./train_data_small.csv',index=False,header=True,sep='\t')
-		sample_val_df.to_csv('./val_data_small.csv',index=False,header=True,sep='\t')
+	sample_train_df.to_csv('./train_data_small.csv',index=False,header=True,sep='\t')
+	sample_val_df.to_csv('./val_data_small.csv',index=False,header=True,sep='\t')
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -76,8 +77,8 @@ def main():
 
 if __name__ == '__main__':
 
-	num_video = 3
-	split_ratio = 0.7
+	num_video = 10
+	split_ratio = 0.99
 
 	parent_folder_path = '/home/ayush/Instance_Segmentation/all'
 
