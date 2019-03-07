@@ -39,7 +39,7 @@ def decrease_dropout():
     pass
 
 def entropy_loss(y, t):
-    loss = tf.nn.softmax_cross_entropy_with_logits(labels=t, logits=y)
+    loss = tf.nn.softmax_cross_entropy_with_logits_v2(labels=t, logits=y)
     return tf.reduce_mean(loss)
 
 def mean_square_loss(x, t):

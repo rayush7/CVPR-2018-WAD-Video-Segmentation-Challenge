@@ -1,2 +1,7 @@
-Epoch:  0 | Loss: 2.29721125 | Time:   11.9
-Epoch:  1 | Loss: 2.29533188 | Time:   14.1
+Epoch:  0 | Loss: 2.06717674 | Time:   11.9
+Epoch:  1 | Loss: 2.06545130 | Time:   14.1
+Epoch:  2 | Loss: 2.06537008 | Time:    7.7
+Epoch:  3 | Loss: 2.06488760 | Time:    5.5
+Epoch:  4 | Loss: 2.06549986 | Time:   11.1
+Epoch:  5 | Loss: 2.06578422 | Time:    9.7
+Epoch:  6 | Loss: 2.06574535 | Time:    7.7
