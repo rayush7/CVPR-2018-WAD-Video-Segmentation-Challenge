@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 import os
 import math
 import time
+import sys
 
-model_name   = 'FCN'
+model_name   = sys.arg[0]
 x_train_path = './Dataset/sample_train_color/'
 t_train_path = './Dataset/sample_train_label/'
 x_train_name = os.listdir(x_train_path)
