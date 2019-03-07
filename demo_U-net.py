@@ -85,14 +85,14 @@ for _ in range(n_batches):
     loss = sess.run(unet.loss)
     total_loss += loss
     end = time.time()
-    message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
-    print(message.format(0, total_loss/n_batches, end-start))
+message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
+print(message.format(0, total_loss/n_batches, end-start))
     
-    if os.path.isfile('./log'):
-        os.remove('./log')
-    with open('./log', 'a') as file_write:
-        file_write.write(message.format(0, total_loss/n_batches, end-start))
-        file_write.write('\n')
+if os.path.isfile('./log'):
+    os.remove('./log')
+with open('./log', 'a') as file_write:
+    file_write.write(message.format(0, total_loss/n_batches, end-start))
+    file_write.write('\n')
 
 for ep in range(epoch):
     total_loss = 0
