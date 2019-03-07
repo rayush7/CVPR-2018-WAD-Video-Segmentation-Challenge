@@ -85,7 +85,7 @@ for _ in range(n_batches):
     total_loss += loss
     end = time.time()
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
-    print(message.format(ep+1, total_loss/n_batches, end-start))
+    print(message.format(0, total_loss/n_batches, end-start))
     
     if os.path.isfile('./log'):
         os.remove('./log')
