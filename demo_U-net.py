@@ -7,6 +7,7 @@ import os
 import math
 import time
 
+model_name   = 'FCN'
 x_train_path = './Dataset/sample_train_color/'
 t_train_path = './Dataset/sample_train_label/'
 x_train_name = os.listdir(x_train_path)
@@ -75,14 +76,13 @@ sess.run(iterator.initializer)
 saver = tf.train.Saver(max_to_keep=epoch)
 if not os.path.isdir('./Models'):
     os.mkdir('./Models')
-    os.mkdir('./Models/U-Net/')
-elif not os.path.isdir('./Models/U-Net/'):
-    os.mkdir('./Models/U-Net/')
+    os.mkdir('./Models/'+model_name+'/')
+elif not os.path.isdir('./Models/'+model_name+'/'):
+    os.mkdir('./Models/'+model_name+'/')
 
 total_loss = 0
-start = time.time()
 for _ in range(n_batches):
-    loss = sess.run(unet.loss)
+    loss = sess.run([unet.loss])
     total_loss += loss
     end = time.time()
 message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
@@ -104,9 +104,10 @@ for ep in range(epoch):
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
     print(message.format(ep+1, total_loss/n_batches, end-start))
     
-    if not os.path.isdir('./Models/U-Net/unet-'+str(ep)):
-        os.mkdir('./Models/U-Net/unet-'+str(ep))
-    save_path = saver.save(sess, './Models/U-Net/unet-'+str(ep)+'/unet.ckpt')
+    if not os.path.isdir('./Models/'+model_name+'/'+model_name+'-'+str(ep)):
+        os.mkdir('./Models/'+model_name+'/'+model_name+'-'+str(ep))
+    save_path = saver.save(sess, 
+                           './Models/'+model_name+'/'+model_name+'-'+str(ep)+'/'model_name+'.ckpt')
     
     with open('./log', 'a') as file_write:
         file_write.write(message.format(ep+1, total_loss/n_batches, end-start))
