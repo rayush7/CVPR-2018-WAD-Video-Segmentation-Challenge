@@ -104,7 +104,10 @@ for ep in range(epoch):
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
     print(message.format(ep+1, total_loss/n_batches, end-start))
     
-    if not os.path.isdir('./Models/'+model_name+'/'+model_name+'-'+str(ep)):
+    if not os.path.isdir('./Models/'+model_name):
+        os.mkdir('./Models/'+model_name)
+        os.mkdir('./Models/'+model_name+'/'+model_name+'-'+str(ep))
+    elif not os.path.isdir('./Models/'+model_name+'/'+model_name+'-'+str(ep)):
         os.mkdir('./Models/'+model_name+'/'+model_name+'-'+str(ep))
     save_path = saver.save(sess, 
                            './Models/'+model_name+'/'+model_name+'-'+str(ep)+'/'model_name+'.ckpt')
