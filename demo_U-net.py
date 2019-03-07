@@ -90,7 +90,7 @@ elif not os.path.isdir('./Models/'+model_name+'/'):
 
 total_loss = 0
 for _ in range(n_batches):
-    loss = sess.run([segnet.loss])
+    loss = sess.run(segnet.loss)
     total_loss += loss
     end = time.time()
 message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
