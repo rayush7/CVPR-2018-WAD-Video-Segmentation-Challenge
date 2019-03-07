@@ -8,7 +8,8 @@ import math
 import time
 import sys
 
-model_name = sys.argv[0]
+model_name = sys.argv[1]
+print('Get model name: ', model_name)
 x_train_path = './Dataset/sample_train_color/'
 t_train_path = './Dataset/sample_train_label/'
 x_train_name = os.listdir(x_train_path)
