@@ -1,4 +1,4 @@
-from models import UNet
+from models import UNet, FCN
 from utils import entropy_loss
 import tensorflow as tf
 import numpy as np
@@ -8,7 +8,7 @@ import math
 import time
 import sys
 
-model_name   = sys.arg[0]
+model_name = sys.arg[0]
 x_train_path = './Dataset/sample_train_color/'
 t_train_path = './Dataset/sample_train_label/'
 x_train_name = os.listdir(x_train_path)
@@ -64,10 +64,16 @@ next_batch = iterator.get_next()
 x_batch, t_batch = next_batch # get the tf variable of input and target images
 
 
-unet = UNet(x=x_batch, t=t_batch,
-            LR=1e-8, input_shape=[None, img_height, img_width, 3], 
-            output_shape=[None, img_height, img_width, class_num], )
-unet.optimize(entropy_loss)
+if model_name.lower()=='unet' or model_name.lower=='u-net':
+    segnet = UNet(x=x_batch, t=t_batch,
+                  LR=1e-8, input_shape=[None, img_height, img_width, 3], 
+                  output_shape=[None, img_height, img_width, class_num], )
+    segnet.optimize(entropy_loss)
+elif model_name.lower()=='fcn':
+    segnet = FCN(x=x_batch, t=t_batch,
+                  LR=1e-8, input_shape=[None, img_height, img_width, 3], 
+                  output_shape=[None, img_height, img_width, class_num], )
+    segnet.optimize(entropy_loss)
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
@@ -83,7 +89,7 @@ elif not os.path.isdir('./Models/'+model_name+'/'):
 
 total_loss = 0
 for _ in range(n_batches):
-    loss = sess.run([unet.loss])
+    loss = sess.run([segnet.loss])
     total_loss += loss
     end = time.time()
 message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
@@ -99,7 +105,7 @@ for ep in range(epoch):
     total_loss = 0
     start = time.time()
     for _ in range(n_batches):
-        _, loss = sess.run([unet.training, unet.loss])
+        _, loss = sess.run([segnet.training, segnet.loss])
         total_loss += loss
     end = time.time()
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
