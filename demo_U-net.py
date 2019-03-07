@@ -89,6 +89,7 @@ elif not os.path.isdir('./Models/'+model_name+'/'):
     os.mkdir('./Models/'+model_name+'/')
 
 total_loss = 0
+start = time.time()
 for _ in range(n_batches):
     loss = sess.run(segnet.loss)
     total_loss += loss
