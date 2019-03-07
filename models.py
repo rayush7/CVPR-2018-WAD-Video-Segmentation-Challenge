@@ -93,9 +93,11 @@ class FCN(object):
         h11 = conv_layer(h10, filter_shape=[3, 3, 1024, 1024], name='L11')
         # Decoder
         h12 = deconv_layer(h11, filter_shape=[3, 3, 1024, 1024], strides=[1, 2, 2, 1], output_shape=[-1, 24, 106, 1024], name='L12')
+        h12 = h12[:, 0:-1, :, :]
         h13 = conv_layer(h12, filter_shape=[3, 3, 1024, 512], name='L13')
         h14 = conv_layer(h13, filter_shape=[3, 3, 512, 512], name='L14')
         h15 = deconv_layer(h14, filter_shape=[3, 3, 512, 512], strides=[1, 2, 2, 1], output_shape=[-1, 46, 212, 512], name='L15')
+        h15 = h15[:, 0:-1, 0:-1, :]
         h16 = conv_layer(h15, filter_shape=[3, 3, 512, 256], name='L16')
         h17 = conv_layer(h16, filter_shape=[3, 3, 256, 256], name='L17')
         h18 = deconv_layer(h17, filter_shape=[3, 3, 256, 256], strides=[1, 2, 2, 1], output_shape=[-1, 90, 422, 256], name='L18')
