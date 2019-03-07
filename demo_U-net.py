@@ -12,14 +12,16 @@ t_train_path = './Dataset/sample_train_label/'
 x_train_name = os.listdir(x_train_path)
 t_train_name = os.listdir(t_train_path)
 x_train_name = [x_train_path+s for s in x_train_name]
+x_train_name = x_train_name[0:100]
 x_train_name.sort()
 t_train_name = [t_train_path+s for s in t_train_name]
+t_train_name = t_train_name[0:100]
 t_train_name.sort()
 
 # parameters
 batch_size = 32
-epoch      = 30
-LR         = 1e-4
+epoch      = 100
+LR         = 1e-5
 img_height = 90
 img_width  = 422
 down_scale = 8
@@ -46,14 +48,14 @@ def _parse_function(x_name, t_name, img_shape, down_scale):
     t = tf.concat([t[:, 0:1], t[:, 33:]], axis=1)
     t = tf.reshape(t, (shape[0], shape[1], 9))
     
-    return x, t#tf.cast(t, tf.float32)
+    return x, t
 
 x_filenames = tf.constant(x_train_name)
 t_filenames = tf.constant(t_train_name)
 
 dataset = tf.data.Dataset.from_tensor_slices((x_filenames, t_filenames))
 dataset = dataset.map(lambda x, y: _parse_function(x, y, (img_height, img_width), down_scale))
-dataset = dataset.shuffle(buffer_size=32).batch(batch_size).repeat(epoch)
+dataset = dataset.shuffle(buffer_size=32).batch(batch_size).repeat(epoch+1)
 iterator = dataset.make_initializable_iterator()
 next_batch = iterator.get_next()
 
@@ -76,7 +78,7 @@ if not os.path.isdir('./Models'):
     os.mkdir('./Models/U-Net/')
 elif not os.path.isdir('./Models/U-Net/'):
     os.mkdir('./Models/U-Net/')
-    
+
 for ep in range(epoch):
     total_loss = 0
     start = time.time()
@@ -85,7 +87,7 @@ for ep in range(epoch):
         total_loss += loss
     end = time.time()
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
-    print(message.format(ep, total_loss/n_batches, end-start))
+    print(message.format(ep+1, total_loss/n_batches, end-start))
     
     if not os.path.isdir('./Models/U-Net/unet-'+str(ep)):
         os.mkdir('./Models/U-Net/unet-'+str(ep))
@@ -94,5 +96,5 @@ for ep in range(epoch):
     if ep==0 and os.path.isfile('./log'):
         os.remove('./log')
     with open('./log', 'a') as file_write:
-        file_write.write(message.format(ep, total_loss/n_batches, end-start))
+        file_write.write(message.format(ep+1, total_loss/n_batches, end-start))
         file_write.write('\n')
