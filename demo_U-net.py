@@ -80,8 +80,9 @@ elif not os.path.isdir('./Models/U-Net/'):
     os.mkdir('./Models/U-Net/')
 
 total_loss = 0
+start = time.time()
 for _ in range(n_batches):
-    loss = sess.run([unet.loss])
+    loss = sess.run(unet.loss)
     total_loss += loss
     end = time.time()
     message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
