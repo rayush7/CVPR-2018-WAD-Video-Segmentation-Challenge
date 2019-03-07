@@ -117,7 +117,7 @@ for ep in range(epoch):
     elif not os.path.isdir('./Models/'+model_name+'/'+model_name+'-'+str(ep)):
         os.mkdir('./Models/'+model_name+'/'+model_name+'-'+str(ep))
     save_path = saver.save(sess, 
-                           './Models/'+model_name+'/'+model_name+'-'+str(ep)+'/'model_name+'.ckpt')
+                           './Models/'+model_name+'/'+model_name+'-'+str(ep)+'/'+model_name+'.ckpt')
     
     with open('./log', 'a') as file_write:
         file_write.write(message.format(ep+1, total_loss/n_batches, end-start))
