@@ -79,6 +79,20 @@ if not os.path.isdir('./Models'):
 elif not os.path.isdir('./Models/U-Net/'):
     os.mkdir('./Models/U-Net/')
 
+total_loss = 0
+for _ in range(n_batches):
+    loss = sess.run([unet.loss])
+    total_loss += loss
+    end = time.time()
+    message = 'Epoch: {:>2} | Loss: {:>10.8f} | Time: {:>6.1f}'
+    print(message.format(ep+1, total_loss/n_batches, end-start))
+    
+    if os.path.isfile('./log'):
+        os.remove('./log')
+    with open('./log', 'a') as file_write:
+        file_write.write(message.format(0, total_loss/n_batches, end-start))
+        file_write.write('\n')
+
 for ep in range(epoch):
     total_loss = 0
     start = time.time()
@@ -93,8 +107,6 @@ for ep in range(epoch):
         os.mkdir('./Models/U-Net/unet-'+str(ep))
     save_path = saver.save(sess, './Models/U-Net/unet-'+str(ep)+'/unet.ckpt')
     
-    if ep==0 and os.path.isfile('./log'):
-        os.remove('./log')
     with open('./log', 'a') as file_write:
         file_write.write(message.format(ep+1, total_loss/n_batches, end-start))
         file_write.write('\n')
