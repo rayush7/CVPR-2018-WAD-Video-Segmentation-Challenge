@@ -40,20 +40,22 @@ def decrease_dropout():
 
 def entropy_loss(y, t):
     if len(y.shape)==4:
-        batch_size, h, w, ch = tf.shape(y)
-        y = tf.reshape(y, [batch_size*h*w, ch])
-        t = tf.reshape(t, [batch_size*h*w, ch])
+        shape = tf.shape(y)
+        y = tf.reshape(y, [shape[0]*shape[1]*shape[2], shape[3]])
+        t = tf.reshape(t, [shape[0]*shape[1]*shape[2], shape[3]])
     loss = tf.nn.softmax_cross_entropy_with_logits_v2(labels=t, logits=y)
     return tf.reduce_mean(loss)
 
 def dice_loss(y, t, w=None):
     # y: [batch_size, h, w, n_class]
-    batch_size, h, w, n_class = tf.shape(y)
-    
-    if w is None:
-        w = tf.ones([n_class, 1])
-    
     eps = 1e-6
+    if w is None:
+        shape = tf.dtypes.cast(tf.shape(y), tf.float32)
+        N = shape[0]*shape[1]*shape[2]
+        w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(y, axis=[0, 1, 2]) + eps), 
+                           axis=1)
+        # w = tf.ones([shape[3], 1]) 
+    
     intersection = tf.math.multiply(y, t)
     intersection = tf.reduce_sum(intersection, axis=[1, 2])
     norm1 = tf.reduce_sum(y, axis=[1, 2])
