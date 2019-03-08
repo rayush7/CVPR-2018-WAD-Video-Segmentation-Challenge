@@ -1,5 +1,5 @@
 from models import UNet, FCN
-from utils import entropy_loss
+from utils import entropy_loss, dice_loss
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,8 +8,16 @@ import math
 import time
 import sys
 
+# python demo_U-net.py fcn/unet cross_entropy/dice_loss
 model_name = sys.argv[1]
 print('Get model name: ', model_name)
+if len(sys.argv)>2 and sys.argv[2]=='cross_entropy':
+    loss_function = entropy_loss
+elif len(sys.argv)>2 and sys.argv[2]=='dice_loss':
+    loss_function = dice_loss
+else:
+    loss_function = entropy_loss
+
 x_train_path = './Dataset/sample_train_color/'
 t_train_path = './Dataset/sample_train_label/'
 x_train_name = os.listdir(x_train_path)
@@ -69,12 +77,12 @@ if model_name.lower()=='unet' or model_name.lower=='u-net':
     segnet = UNet(x=x_batch, t=t_batch,
                   LR=1e-8, input_shape=[None, img_height, img_width, 3], 
                   output_shape=[None, img_height, img_width, class_num], )
-    segnet.optimize(entropy_loss)
+    segnet.optimize(loss_function)
 elif model_name.lower()=='fcn':
     segnet = FCN(x=x_batch, t=t_batch,
                   LR=1e-8, input_shape=[None, img_height, img_width, 3], 
                   output_shape=[None, img_height, img_width, class_num], )
-    segnet.optimize(entropy_loss)
+    segnet.optimize(loss_function)
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
