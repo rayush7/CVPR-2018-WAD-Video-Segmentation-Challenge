@@ -50,7 +50,7 @@ def dice_loss(y, t, w=None):
     # y: [batch_size, h, w, n_class]
     eps = 1e-6
     if w is None:
-        shape = tf.dtypes.cast(tf.shape(y), tf.float32)
+        shape = tf.cast(tf.shape(y), tf.float32)
         N = shape[0]*shape[1]*shape[2]
         w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(y, axis=[0, 1, 2]) + eps), 
                            axis=1)
