@@ -46,8 +46,13 @@ def entropy_loss(y, t, w=None):
     if w is None:
         shape = tf.cast(tf.shape(y), tf.float32)
         N = shape[0]*shape[1]*shape[2]
-        w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=0) + eps), 
-                           axis=1)
+        class_distr = tf.reduce_sum(t, axis=0)
+        class_distr = class_distr/tf.reduce_sum(class_distr)
+        class_max = tf.reduce_max(class_distr)
+        class_min = tf.reduce_min(class_distr)
+        w = (class_max/(class_distr+1e-6))**0.3
+        #w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=0) + eps), 
+        #                   axis=1)
         w = tf.matmul(t, w)
     loss = tf.nn.softmax_cross_entropy_with_logits_v2(labels=t, logits=y)
     return tf.reduce_mean(loss*w)
@@ -57,11 +62,16 @@ def dice_loss(y, t, w=None):
     y = tf.nn.softmax(y)
     eps = 1e-6
     if w is None:
-        shape = tf.cast(tf.shape(t), tf.float32)
+        shape = tf.cast(tf.shape(y), tf.float32)
         N = shape[0]*shape[1]*shape[2]
-        w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=[0, 1, 2]) + eps), 
-                           axis=1)
-        # w = tf.ones([shape[3], 1]) 
+        class_distr = tf.reduce_sum(t, axis=0)
+        class_distr = class_distr/tf.reduce_sum(class_distr)
+        class_max = tf.reduce_max(class_distr)
+        class_min = tf.reduce_min(class_distr)
+        w = (class_max/(class_distr+1e-6))**0.3
+        #w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=[0, 1, 2]) + eps), 
+        #                   axis=1)
+        w = w/tf.max(w)
     
     intersection = tf.multiply(y, t)
     intersection = tf.reduce_sum(intersection, axis=[1, 2])
