@@ -76,13 +76,18 @@ x_batch, t_batch = next_batch # get the tf variable of input and target images
 
 if model_name.lower()=='unet' or model_name.lower=='u-net':
     segnet = UNet(x=x_batch, t=t_batch,
-                  LR=1e-8, input_shape=[None, img_height, img_width, 3], 
+                  LR=LR, input_shape=[None, img_height, img_width, 3], 
                   output_shape=[None, img_height, img_width, class_num], )
     segnet.optimize(loss_function)
 elif model_name.lower()=='fcn':
     segnet = FCN(x=x_batch, t=t_batch,
-                  LR=1e-8, input_shape=[None, img_height, img_width, 3], 
-                  output_shape=[None, img_height, img_width, class_num], )
+                 LR=LR, input_shape=[None, img_height, img_width, 3], 
+                 output_shape=[None, img_height, img_width, class_num], )
+    segnet.optimize(loss_function)
+elif model_name.lower()=='resnet50' or model_name.lower()=='resnet':
+    segnet = FCN_ResNet50(x=x_batch, t=t_batch,
+                          LR=LR, input_shape=[None, img_height, img_width, 3], 
+                          output_shape=[None, img_height, img_width, class_num], )
     segnet.optimize(loss_function)
 
 sess = tf.Session()
