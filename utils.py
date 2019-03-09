@@ -54,7 +54,7 @@ def entropy_loss(y, t, w=None):
 
 def dice_loss(y, t, w=None):
     # y: [batch_size, h, w, n_class]
-    y = tf.nn.sigmoid(y)
+    y = tf.nn.softmax(y)
     eps = 1e-6
     if w is None:
         shape = tf.cast(tf.shape(t), tf.float32)
