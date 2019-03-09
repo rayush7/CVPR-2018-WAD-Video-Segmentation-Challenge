@@ -50,7 +50,8 @@ def entropy_loss(y, t, w=None):
         class_distr = class_distr/tf.reduce_sum(class_distr)
         class_max = tf.reduce_max(class_distr)
         class_min = tf.reduce_min(class_distr)
-        w = (class_max/(class_distr+1e-6))**0.3
+        w = tf.expand_dims((class_max/(class_distr+1e-6))**0.3,
+                           axis=1)
         #w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=0) + eps), 
         #                   axis=1)
         w = tf.matmul(t, w)
@@ -68,7 +69,8 @@ def dice_loss(y, t, w=None):
         class_distr = class_distr/tf.reduce_sum(class_distr)
         class_max = tf.reduce_max(class_distr)
         class_min = tf.reduce_min(class_distr)
-        w = (class_max/(class_distr+1e-6))**0.3
+        w = tf.expand_dims((class_max/(class_distr+1e-6))**0.3,
+                           axis=1)
         #w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=[0, 1, 2]) + eps), 
         #                   axis=1)
         
