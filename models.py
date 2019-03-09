@@ -25,12 +25,12 @@ class UNet(object):
 
     def _forward_pass(self, x):
         # Encoder
-        h1 = conv_layer(x, filter_shape=[3, 3, 3, 64], name='L1') # (90, 422, 64)
+        h1 = conv_layer(x, filter_shape=[3, 3, 3, 64], name='L1') # (90, 420, 64)
         h2 = conv_layer(h1, filter_shape=[3, 3, 64, 64], name='L2')
-        h3 = pooling_layer(h2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L3') # (45, 211, 64)
+        h3 = pooling_layer(h2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L3') # (45, 210, 64)
         h4 = conv_layer(h3, filter_shape=[3, 3, 64, 256], name='L4')
         h5 = conv_layer(h4, filter_shape=[3, 3, 256, 256], name='L5')
-        h6 = pooling_layer(h5, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L6') # (23, 106, 128)
+        h6 = pooling_layer(h5, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L6') # (23, 105, 128)
         h7 = conv_layer(h6, filter_shape=[3, 3, 256, 512], name='L7')
         h8 = conv_layer(h7, filter_shape=[3, 3, 512, 512], name='L8')
         h9 = pooling_layer(h8, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L9') # (12, 53, 256)
@@ -38,14 +38,14 @@ class UNet(object):
         h11 = conv_layer(h10, filter_shape=[3, 3, 1024, 1024], name='L11')
         # Decoder
         h12 = deconv_layer(h11, filter_shape=[3, 3, 512, 1024], strides=[1, 2, 2, 1], output_shape=[-1, 24, 106, 512], name='L12')
-        h12 = tf.concat([h12[:, 0:-1, :, :], h8], axis=3)
+        h12 = tf.concat([h12[:, 0:-1, 0:-1, :], h8], axis=3)
         h13 = conv_layer(h12, filter_shape=[3, 3, 1024, 512], name='L13')
         h14 = conv_layer(h13, filter_shape=[3, 3, 512, 512], name='L14')
-        h15 = deconv_layer(h14, filter_shape=[3, 3, 256, 512], strides=[1, 2, 2, 1], output_shape=[-1, 46, 212, 256], name='L15')
-        h15 = tf.concat([h15[:, 0:-1, 0:-1, :], h5], axis=3)
+        h15 = deconv_layer(h14, filter_shape=[3, 3, 256, 512], strides=[1, 2, 2, 1], output_shape=[-1, 46, 210, 256], name='L15')
+        h15 = tf.concat([h15[:, 0:-1, :, :], h5], axis=3)
         h16 = conv_layer(h15, filter_shape=[3, 3, 512, 256], name='L16')
         h17 = conv_layer(h16, filter_shape=[3, 3, 256, 256], name='L17')
-        h18 = deconv_layer(h17, filter_shape=[3, 3, 64, 256], strides=[1, 2, 2, 1], output_shape=[-1, 90, 422, 64], name='L18')
+        h18 = deconv_layer(h17, filter_shape=[3, 3, 64, 256], strides=[1, 2, 2, 1], output_shape=[-1, 90, 420, 64], name='L18')
         h18 = tf.concat([h18, h2], axis=3)
         h19 = conv_layer(h18, filter_shape=[3, 3, 128, 64], name='L19')
         h20 = conv_layer(h19, filter_shape=[3, 3, 64, 64], name='L20')
@@ -82,12 +82,12 @@ class FCN(object):
 
     def _forward_pass(self, x):
         # Encoder
-        h1 = conv_layer(x, filter_shape=[3, 3, 3, 64], name='L1') # (90, 422, 64)
+        h1 = conv_layer(x, filter_shape=[3, 3, 3, 64], name='L1') # (90, 420, 64)
         h2 = conv_layer(h1, filter_shape=[3, 3, 64, 64], name='L2')
-        h3 = pooling_layer(h2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L3') # (45, 211, 64)
+        h3 = pooling_layer(h2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L3') # (45, 210, 64)
         h4 = conv_layer(h3, filter_shape=[3, 3, 64, 256], name='L4')
         h5 = conv_layer(h4, filter_shape=[3, 3, 256, 256], name='L5')
-        h6 = pooling_layer(h5, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L6') # (23, 106, 128)
+        h6 = pooling_layer(h5, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L6') # (23, 105, 128)
         h7 = conv_layer(h6, filter_shape=[3, 3, 256, 512], name='L7')
         h8 = conv_layer(h7, filter_shape=[3, 3, 512, 512], name='L8')
         h9 = pooling_layer(h8, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], name='L9') # (12, 53, 256)
@@ -95,14 +95,14 @@ class FCN(object):
         h11 = conv_layer(h10, filter_shape=[3, 3, 1024, 1024], name='L11')
         # Decoder
         h12 = deconv_layer(h11, filter_shape=[3, 3, 1024, 1024], strides=[1, 2, 2, 1], output_shape=[-1, 24, 106, 1024], name='L12')
-        h12 = h12[:, 0:-1, :, :]
+        h12 = h12[:, 0:-1, 0:-1, :]
         h13 = conv_layer(h12, filter_shape=[3, 3, 1024, 512], name='L13')
         h14 = conv_layer(h13, filter_shape=[3, 3, 512, 512], name='L14')
-        h15 = deconv_layer(h14, filter_shape=[3, 3, 512, 512], strides=[1, 2, 2, 1], output_shape=[-1, 46, 212, 512], name='L15')
-        h15 = h15[:, 0:-1, 0:-1, :]
+        h15 = deconv_layer(h14, filter_shape=[3, 3, 512, 512], strides=[1, 2, 2, 1], output_shape=[-1, 46, 210, 512], name='L15')
+        h15 = h15[:, 0:-1, :, :]
         h16 = conv_layer(h15, filter_shape=[3, 3, 512, 256], name='L16')
         h17 = conv_layer(h16, filter_shape=[3, 3, 256, 256], name='L17')
-        h18 = deconv_layer(h17, filter_shape=[3, 3, 256, 256], strides=[1, 2, 2, 1], output_shape=[-1, 90, 422, 256], name='L18')
+        h18 = deconv_layer(h17, filter_shape=[3, 3, 256, 256], strides=[1, 2, 2, 1], output_shape=[-1, 90, 420, 256], name='L18')
         h19 = conv_layer(h18, filter_shape=[3, 3, 256, 64], name='L19')
         h20 = conv_layer(h19, filter_shape=[3, 3, 64, 64], name='L20')
         h21 = conv_layer(h20, filter_shape=[1, 1, 64, self.output_shape[3]], name='L21', non_linear=None)
