@@ -35,7 +35,7 @@ batch_size = 32
 epoch      = 30 
 LR         = 5e-4
 img_height = 90
-img_width  = 422
+img_width  = 420
 down_scale = 8
 class_num  = 9
 data_size  = len(x_train_name)
@@ -52,6 +52,7 @@ def _parse_function(x_name, t_name, img_shape, down_scale):
     t = tf.image.decode_png(t_string, channels=1, dtype=tf.uint16)
     t = t[1560:2280, 7:-7]
     t = t[::down_scale, ::down_scale]
+    t = t[:, 1:-1]
     t = tf.cast(t/1000, tf.int32)
     
     shape = tf.shape(t)

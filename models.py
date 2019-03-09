@@ -1,5 +1,6 @@
 from layer import conv_layer, pooling_layer, deconv_layer
 from tensorflow.python.keras.applications.resnet50 import ResNet50
+from tensorflow.python.keras.applications.vgg19 import VGG19
 import tensorflow as tf
 import pdb
     
@@ -159,6 +160,71 @@ class FCN_ResNet50(object):
         h = conv_layer(h, filter_shape=[3, 3, 128, 128], name='L11')
         h = conv_layer(h, filter_shape=[3, 3, 128, 128], name='L12')
         h = deconv_layer(h, filter_shape=[3, 3, 64, 128], strides=[1, 2, 2, 1], output_shape=[-1, 96, 448, 64], name='L13')
+        h = conv_layer(h, filter_shape=[3, 3, 64, 64], name='L14')
+        h = conv_layer(h, filter_shape=[3, 3, 64, self.output_shape[3]], name='L15')
+        h = h[:, 0:self.output_shape[1], 0:self.output_shape[2], :]
+        
+        return h
+    
+    def optimize(self, loss):
+        shape = tf.shape(self.y) # [batch_size, height, width, class]
+        #y = tf.reshape(self.y, [shape[0]*shape[1]*shape[2], shape[3]])
+        #t = tf.reshape(self.t, [shape[0]*shape[1]*shape[2], shape[3]])
+        
+        self.loss = loss(self.y, self.t)
+        self.training = tf.train.AdamOptimizer(self.LR).minimize(self.loss)
+        
+class FCN_VGG19(object):
+    def __init__(self, x, t, LR, input_shape, output_shape, model_name='FCN_ResNet50'):
+        # optimization setting
+        self.LR = LR
+        
+        # naming setting
+        self.model_name = model_name
+        
+        # pretrain model
+        self.vgg19 = VGG19(include_top=False, weights='imagenet', 
+                              input_tensor=None, 
+                              input_shape=input_shape[1:])
+        self.vgg19.trainable = False
+        #for layer in resnet50.layers[:164]:
+        #    layer.trainable = False
+        
+        # model setting
+        self.input_shape = input_shape
+        self.output_shape = output_shape
+        with tf.variable_scope(self.model_name):
+            self.x = x
+            self.t = t
+            self.features = self.vgg19(inputs=self.x) # (2, 13, 2048)
+            self.y = self._forward_pass(self.features)
+            #self.x = tf.placeholder(dtype=tf.float32, shape=self.input_shape, name='input')
+            #self.t = tf.placeholder(dtype=tf.float32, shape=self.output_shape, name='output')
+            #self.y = self._forward_pass(self.x)
+
+    def _forward_pass(self, x):
+        # Encoder
+        h = deconv_layer(x, filter_shape=[2, 2, 512, 512], 
+                         strides=[1, 2, 2, 1], output_shape=[-1, 5, 26, 512], 
+                         padding='VALID', name='L1')
+        h = conv_layer(h, filter_shape=[3, 3, 512, 512], name='L2')
+        h = conv_layer(h, filter_shape=[3, 3, 512, 512], name='L3')
+        h = deconv_layer(h, filter_shape=[2, 2, 512, 512], 
+                         strides=[1, 2, 2, 1], output_shape=[-1, 11, 52, 512], 
+                         padding='VALID', name='L4')
+        h = conv_layer(h, filter_shape=[3, 3, 512, 512], name='L5')
+        h = conv_layer(h, filter_shape=[3, 3, 512, 512], name='L6')
+        h = deconv_layer(h, filter_shape=[2, 2, 256, 512], 
+                         strides=[1, 2, 2, 1], output_shape=[-1, 22, 105, 256], 
+                         padding='VALID', name='L7')
+        h = conv_layer(h, filter_shape=[3, 3, 256, 256], name='L8')
+        h = conv_layer(h, filter_shape=[3, 3, 256, 256], name='L9')
+        h = deconv_layer(h, filter_shape=[2, 2, 128, 256], 
+                         strides=[1, 2, 2, 1], output_shape=[-1, 45, 210, 128], 
+                         padding='VALID', name='L10')
+        h = conv_layer(h, filter_shape=[3, 3, 128, 128], name='L11')
+        h = conv_layer(h, filter_shape=[3, 3, 128, 128], name='L12')
+        h = deconv_layer(h, filter_shape=[3, 3, 64, 128], strides=[1, 2, 2, 1], output_shape=[-1, 90, 420, 64], name='L13')
         h = conv_layer(h, filter_shape=[3, 3, 64, 64], name='L14')
         h = conv_layer(h, filter_shape=[3, 3, 64, self.output_shape[3]], name='L15')
         h = h[:, 0:self.output_shape[1], 0:self.output_shape[2], :]
