@@ -1,4 +1,4 @@
-from models import UNet, FCN, FCN_ResNet50
+from models import UNet, FCN, FCN_ResNet50, FCN_VGG19
 from utils import entropy_loss, dice_loss
 import tensorflow as tf
 import numpy as np
@@ -89,6 +89,11 @@ elif model_name.lower()=='resnet50' or model_name.lower()=='resnet':
     segnet = FCN_ResNet50(x=x_batch, t=t_batch,
                           LR=LR, input_shape=[None, img_height, img_width, 3], 
                           output_shape=[None, img_height, img_width, class_num], )
+    segnet.optimize(loss_function)
+elif model_name.lower()=='vgg19' or model_name.lower()=='vgg':
+    segnet = FCN_VGG19(x=x_batch, t=t_batch,
+                       LR=LR, input_shape=[None, img_height, img_width, 3], 
+                       output_shape=[None, img_height, img_width, class_num], )
     segnet.optimize(loss_function)
 
 sess = tf.Session()
