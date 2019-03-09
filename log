@@ -1,1 +1,12 @@
-Epoch:  0 | Loss: 1.81665559 | Time:   36.6
+Epoch:  0 | Loss: 237.81688153 | Time:   73.0
+Epoch:  1 | Loss: 160.26013781 | Time:   80.6
+Epoch:  2 | Loss: 22.46425895 | Time:   79.1
+Epoch:  3 | Loss: 22.23744567 | Time:   78.9
+Epoch:  4 | Loss: 22.21493761 | Time:   78.9
+Epoch:  5 | Loss: 22.38658074 | Time:   78.6
+Epoch:  6 | Loss: 22.47403744 | Time:   78.5
+Epoch:  7 | Loss: 22.33490252 | Time:   78.3
+Epoch:  8 | Loss: 22.19760644 | Time:   78.3
+Epoch:  9 | Loss: 22.28993734 | Time:   78.5
+Epoch: 10 | Loss: 22.52973481 | Time:   78.2
+Epoch: 11 | Loss: 22.66512991 | Time:   78.5

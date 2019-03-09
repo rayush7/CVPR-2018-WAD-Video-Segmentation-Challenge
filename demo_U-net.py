@@ -32,18 +32,18 @@ t_train_name.sort()
 
 # parameters
 batch_size = 32
-epoch      = 30 
+epoch      = 10 
 LR         = 5e-4
 img_height = 90
 img_width  = 420
 down_scale = 8
-class_num  = 9
+class_num  = 2
 data_size  = len(x_train_name)
 n_batches  = int(math.ceil(data_size/batch_size))
 
 
 # This cell is used to construct the pipeline of dataset
-def _parse_function(x_name, t_name, img_shape, down_scale):
+def _parse_function(x_name, t_name, img_shape, down_scale, class_num):
     x_string = tf.read_file(x_name)
     x = tf.image.decode_jpeg(x_string, channels=3)
     x = x[1560:2280, 7:-7]/1000
@@ -58,8 +58,8 @@ def _parse_function(x_name, t_name, img_shape, down_scale):
     shape = tf.shape(t)
     t = tf.reshape(t, (shape[0]*shape[1],))
     t = tf.one_hot(t, depth=41)
-    t = tf.concat([t[:, 0:1], t[:, 33:]], axis=1)
-    t = tf.reshape(t, (shape[0], shape[1], 9))
+    t = tf.concat([t[:, 0:1], t[:, 33:34]], axis=1)
+    t = tf.reshape(t, (shape[0], shape[1], class_num))
     
     return x, t
 
@@ -67,7 +67,7 @@ x_filenames = tf.constant(x_train_name)
 t_filenames = tf.constant(t_train_name)
 
 dataset = tf.data.Dataset.from_tensor_slices((x_filenames, t_filenames))
-dataset = dataset.map(lambda x, y: _parse_function(x, y, (img_height, img_width), down_scale))
+dataset = dataset.map(lambda x, y: _parse_function(x, y, (img_height, img_width), down_scale, class_num))
 dataset = dataset.shuffle(buffer_size=32).batch(batch_size).repeat(epoch+1)
 iterator = dataset.make_initializable_iterator()
 next_batch = iterator.get_next()
@@ -120,6 +120,7 @@ print(message.format(0, total_loss/n_batches, end-start))
 if os.path.isfile('./log'):
     os.remove('./log')
 with open('./log', 'a') as file_write:
+    file_write.write(model_name + '  ' + sys.argv[2] )
     file_write.write(message.format(0, total_loss/n_batches, end-start))
     file_write.write('\n')
 
