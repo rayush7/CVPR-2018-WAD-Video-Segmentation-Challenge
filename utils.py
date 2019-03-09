@@ -64,7 +64,7 @@ def dice_loss(y, t, w=None):
     if w is None:
         shape = tf.cast(tf.shape(y), tf.float32)
         N = shape[0]*shape[1]*shape[2]
-        class_distr = tf.reduce_sum(t, axis=0)
+        class_distr = tf.reduce_sum(t, axis=[0, 1, 2])
         class_distr = class_distr/tf.reduce_sum(class_distr)
         class_max = tf.reduce_max(class_distr)
         class_min = tf.reduce_min(class_distr)
