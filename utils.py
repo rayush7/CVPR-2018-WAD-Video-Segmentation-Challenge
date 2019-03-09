@@ -48,6 +48,7 @@ def entropy_loss(y, t):
 
 def dice_loss(y, t, w=None):
     # y: [batch_size, h, w, n_class]
+    y = tf.nn.sigmoid(y)
     eps = 1e-6
     if w is None:
         shape = tf.cast(tf.shape(y), tf.float32)
@@ -56,7 +57,7 @@ def dice_loss(y, t, w=None):
                            axis=1)
         # w = tf.ones([shape[3], 1]) 
     
-    intersection = tf.math.multiply(y, t)
+    intersection = tf.multiply(y, t)
     intersection = tf.reduce_sum(intersection, axis=[1, 2])
     norm1 = tf.reduce_sum(y, axis=[1, 2])
     norm2 = tf.reduce_sum(t, axis=[1, 2])

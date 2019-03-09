@@ -11,6 +11,7 @@ import sys
 # python demo_U-net.py fcn/unet cross_entropy/dice_loss
 model_name = sys.argv[1]
 print('Get model name: ', model_name)
+print('Get loss function: ', sys.argv[2])
 if len(sys.argv)>2 and sys.argv[2]=='cross_entropy':
     loss_function = entropy_loss
 elif len(sys.argv)>2 and sys.argv[2]=='dice_loss':
@@ -23,16 +24,16 @@ t_train_path = './Dataset/sample_train_label/'
 x_train_name = os.listdir(x_train_path)
 t_train_name = os.listdir(t_train_path)
 x_train_name = [x_train_path+s for s in x_train_name]
-x_train_name = x_train_name[0:100]
+#x_train_name = x_train_name[0:100]
 x_train_name.sort()
 t_train_name = [t_train_path+s for s in t_train_name]
-t_train_name = t_train_name[0:100]
+#t_train_name = t_train_name[0:100]
 t_train_name.sort()
 
 # parameters
 batch_size = 32
-epoch      = 100
-LR         = 1e-5
+epoch      = 30 
+LR         = 5e-4
 img_height = 90
 img_width  = 422
 down_scale = 8
