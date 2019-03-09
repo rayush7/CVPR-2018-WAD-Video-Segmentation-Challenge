@@ -71,8 +71,7 @@ def dice_loss(y, t, w=None):
         w = (class_max/(class_distr+1e-6))**0.3
         #w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=[0, 1, 2]) + eps), 
         #                   axis=1)
-        w = w/tf.max(w)
-    
+        
     intersection = tf.multiply(y, t)
     intersection = tf.reduce_sum(intersection, axis=[1, 2])
     norm1 = tf.reduce_sum(y, axis=[1, 2])
