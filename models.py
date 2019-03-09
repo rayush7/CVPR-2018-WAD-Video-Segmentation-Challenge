@@ -186,7 +186,7 @@ class FCN_VGG19(object):
         self.vgg19 = VGG19(include_top=False, weights='imagenet', 
                               input_tensor=None, 
                               input_shape=input_shape[1:])
-        self.vgg19.trainable = False
+        self.vgg19.trainable = True
         #for layer in resnet50.layers[:164]:
         #    layer.trainable = False
         

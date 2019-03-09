@@ -38,22 +38,28 @@ def decrease_dropout():
     # decrease dropout rate
     pass
 
-def entropy_loss(y, t):
+def entropy_loss(y, t, w=None):
     if len(y.shape)==4:
         shape = tf.shape(y)
         y = tf.reshape(y, [shape[0]*shape[1]*shape[2], shape[3]])
         t = tf.reshape(t, [shape[0]*shape[1]*shape[2], shape[3]])
+    if w is None:
+        shape = tf.cast(tf.shape(y), tf.float32)
+        N = shape[0]*shape[1]*shape[2]
+        w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=[0, 1, 2]) + eps), 
+                           axis=1)
+        w = tf.matmul(t, w)
     loss = tf.nn.softmax_cross_entropy_with_logits_v2(labels=t, logits=y)
-    return tf.reduce_mean(loss)
+    return tf.reduce_mean(loss*w)
 
 def dice_loss(y, t, w=None):
     # y: [batch_size, h, w, n_class]
     y = tf.nn.sigmoid(y)
     eps = 1e-6
     if w is None:
-        shape = tf.cast(tf.shape(y), tf.float32)
+        shape = tf.cast(tf.shape(t), tf.float32)
         N = shape[0]*shape[1]*shape[2]
-        w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(y, axis=[0, 1, 2]) + eps), 
+        w = tf.expand_dims(N/(shape[3]*tf.reduce_sum(t, axis=[0, 1, 2]) + eps), 
                            axis=1)
         # w = tf.ones([shape[3], 1]) 
     
