@@ -1,4 +1,4 @@
-from models import UNet, FCN
+from models import UNet, FCN, FCN_ResNet50
 from utils import entropy_loss, dice_loss
 import tensorflow as tf
 import numpy as np

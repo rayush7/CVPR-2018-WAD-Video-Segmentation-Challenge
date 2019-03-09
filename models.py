@@ -61,7 +61,7 @@ class UNet(object):
 
 
 class FCN(object):
-    def __init__(self, x, t, LR, input_shape, output_shape, model_name='U-Net'):
+    def __init__(self, x, t, LR, input_shape, output_shape, model_name='FCN'):
         # optimization setting
         self.LR = LR
         
@@ -117,7 +117,7 @@ class FCN(object):
 
 
 class FCN_ResNet50(object):
-    def __init__(self, x, t, LR, input_shape, output_shape, model_name='U-Net'):
+    def __init__(self, x, t, LR, input_shape, output_shape, model_name='FCN_ResNet50'):
         # optimization setting
         self.LR = LR
         
