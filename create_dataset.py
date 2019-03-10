@@ -8,6 +8,17 @@ import tqdm
 import datetime
 import json
 
+category2id = {'car':          33,
+               'motorbicycle': 34, 
+               'bicycle':      35,
+               'person':       36, 
+               'truck':        38,
+               'bus':          39,
+               'tricycle':     40,
+              }
+id2category = {}
+for cat, _id in category2id.items():
+    id2category[_id] = cat
 
 def create_coco(img_path, label_path, destination):
     label_path.sort()
@@ -80,7 +91,7 @@ def create_object2color(label_path, id2category):
     for _id in id2category.keys():
         class_summary[_id] = set()
     
-    for img_id, path in tqdm.tqdm(enumerate(label_path)):
+    for img_id, path in enumerate(label_path):
         label = Image.open(path)
         label = np.array(label)
         label_class = np.ndarray.astype(label/1000, np.int32)
