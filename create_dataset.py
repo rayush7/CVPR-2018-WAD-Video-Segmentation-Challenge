@@ -8,35 +8,39 @@ import numpy as np
 import tqdm
 import datetime
 import json
+import pdb
 
-id2classid = {1:33,
-              2:34:
-              3:35,
-              4:36,
-              5:38,
-              6:39,
-              7:40,}
 
-category2id = {'car':          1,
-               'motorbicycle': 2, 
-               'bicycle':      3,
-               'person':       4, 
-               'truck':        5,
-               'bus':          6,
-               'tricycle':     7,}
+id2classid = {33:1,
+              34:2,
+              35:3,
+              36:4,
+              38:5,
+              39:6,
+              40:7,}
+
+category2id = {'car':          33,
+               'motorbicycle': 34, 
+               'bicycle':      35,
+               'person':       36, 
+               'truck':        38,
+               'bus':          39,
+               'tricycle':     40,}
 id2category = {}
 for cat, _id in category2id.items():
     id2category[_id] = cat
 
 def create_coco(img_path, label_path, destination, crop_size=None, down_scale=None):
+    
     label_path.sort()
     img_path.sort()
     
     # create images list
-    image_list = create_image_list(img_path, crop_size=crop_size, down_scale=down_scale)
+    image_list = create_image_list(img_path)
     
     # create annotation list
-    object2color, class_instance = create_object2color(label_path, id2category)
+    #object2color, class_instance = create_object2color(label_path, id2category)
+    object2color, class_instance = create_object2color(label_path)
     category_ids = create_color2category(class_instance, object2color)
     
     is_crowd = 0
@@ -50,14 +54,15 @@ def create_coco(img_path, label_path, destination, crop_size=None, down_scale=No
         label = Image.open(path)
         label = np.array(label)
         
-        if (crop_size is not None) and (down_scale is not None):
-            label = resize_label(label, crop_size=crop_size, down_scale=down_scale)
+        #if (crop_size is not None) and (down_scale is not None):
+        #    label = resize_label(label, crop_size=crop_size, down_scale=down_scale)
         
         mask = do_mask_image(label, class_instance[img_id], object2color)
         mask = Image.fromarray(np.uint8(mask))
         sub_masks = create_sub_masks(mask)
         for color, sub_mask in sub_masks.items():
-            category_id = category_ids[img_id][color]
+            category_id = id2classid[category_ids[img_id][color]]
+            #annotation = create_sub_mask_annotation(sub_mask, img_id, category_id, annotation_id, is_crowd)
             try:
                 annotation = create_sub_mask_annotation(sub_mask, img_id, category_id, annotation_id, is_crowd)
             except:
@@ -89,10 +94,10 @@ def create_image_list(img_path, crop_size=None, down_scale=None):
     h = img.height
     w = img.width
     
-    if (crop_size is not None) and (down_scale is not None):
-        img = np.array(img)
-        img = resize_image(img, crop_size=crop_size, down_scale=down_scale)
-        h, w, _ = img.shape
+    #if (crop_size is not None) and (down_scale is not None):
+    #    img = np.array(img)
+    #    img = resize_image(img, crop_size=crop_size, down_scale=down_scale)
+    #    h, w, _ = img.shape
     
     image_list = []
     for img_id, path in enumerate(img_path):
@@ -109,7 +114,8 @@ def create_image_list(img_path, crop_size=None, down_scale=None):
     return image_list
 
 
-def create_object2color(label_path, id2category):
+#def create_object2color(label_path, id2category):
+def create_object2color(label_path):
     
     class_instance = {}
     class_summary = {}
@@ -143,7 +149,7 @@ def create_object2color(label_path, id2category):
     for class_id, instances_id in class_summary.items():
         for instance_id in instances_id:
             r, g, b = generate_color(color_set)
-            object2color[(class_id, instance_id)] = (r, g, b)
+            object2color[(id2classid[class_id], instance_id)] = (r, g, b)
             
     
     return object2color, class_instance
@@ -156,7 +162,7 @@ def do_mask_image(label, class_instance, object2color):
     image_mask = np.zeros([h, w, 3], np.int32)
     for class_id, instance_id in class_instance:
         mask = np.zeros([h, w, 3], np.int32)
-        r, g, b = object2color[(class_id, instance_id)]
+        r, g, b = object2color[(id2classid[class_id], instance_id)]
         
         intersect = (label_class==class_id)*(label_instance==instance_id)
         mask[:, :, 0] = r*intersect
@@ -173,7 +179,7 @@ def create_color2category(class_instance, object2color):
     for img_id, pair_list in class_instance.items():
         category_ids[img_id] = {}
         for class_id, instance_id in pair_list:
-            r, g, b = object2color[(class_id, instance_id)]
+            r, g, b = object2color[(id2classid[class_id], instance_id)]
             category_ids[img_id][str((r, g, b))] = class_id
     
     return category_ids

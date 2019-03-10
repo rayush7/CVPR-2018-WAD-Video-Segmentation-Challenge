@@ -1,6 +1,6 @@
 from skimage.transform import resize
 
-def resize_image(img, crop_size=[1560, 430, 12, 12], down_scale=4):
+def resize_image(img, crop_size=None, down_scale=None):
     '''
     This function is used to resize the given image.
     
@@ -26,7 +26,7 @@ def resize_image(img, crop_size=[1560, 430, 12, 12], down_scale=4):
     img = resize(img, (h, w, ch), anti_aliasing=True, mode='constant')
     return img
 
-def resize_label(label, crop_size=[1560, 430, 12, 12], down_scale=4):
+def resize_label(label, crop_size=None, down_scale=None):
     crop_top, crop_down, crop_left, crop_right = crop_size
     label = label[crop_top:-crop_down, crop_left:-crop_right]
     
