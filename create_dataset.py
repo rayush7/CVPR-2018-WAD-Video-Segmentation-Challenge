@@ -72,14 +72,14 @@ def create_coco(img_path, label_path, destination, crop_size=None, down_scale=No
     data['images'] = image_list
     data['annotations'] = annotations
     data['categories'] = [
-        {"supercategory": "vehicle", "id": 33,"name": "car"},
-        {"supercategory": "vehicle", "id": 34,"name": "motorbicycle"},
-        {"supercategory": "vehicle", "id": 35,"name": "bicycle"},
-        {"supercategory": "vehicle", "id": 38,"name": "truck"},
-        {"supercategory": "vehicle", "id": 39,"name": "bus"},
-        {"supercategory": "vehicle", "id": 40,"name": "tricycle"},
+        {"supercategory": "vehicle", "id": 1,"name": "car"},
+        {"supercategory": "vehicle", "id": 2,"name": "motorbicycle"},
+        {"supercategory": "vehicle", "id": 3,"name": "bicycle"},
+        {"supercategory": "vehicle", "id": 5,"name": "truck"},
+        {"supercategory": "vehicle", "id": 6,"name": "bus"},
+        {"supercategory": "vehicle", "id": 7,"name": "tricycle"},
 
-        {"supercategory": "person", "id": 36,"name": "person"},
+        {"supercategory": "person", "id": 4,"name": "person"},
     ]
     with open(destination, 'w') as f:
         json.dump(data, f, indent=4)
