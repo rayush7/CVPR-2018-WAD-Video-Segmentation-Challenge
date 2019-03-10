@@ -2,8 +2,11 @@ from PIL import Image
 from skimage import measure
 from shapely.geometry import Polygon, MultiPolygon
 
+import os
 import numpy as np
-import pdb
+import tqdm
+import datetime
+import json
 
 
 def create_coco(img_path, label_path, destination):
