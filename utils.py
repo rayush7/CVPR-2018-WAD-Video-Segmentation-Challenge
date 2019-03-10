@@ -145,4 +145,3 @@ def sigmoid_loss(y, t):
     
     
     
-    
