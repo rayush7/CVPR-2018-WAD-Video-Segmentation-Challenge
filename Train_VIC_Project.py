@@ -213,8 +213,8 @@ dataset_val.prepare()
 
 dataset = dataset_train
 image_ids = np.random.choice(dataset.image_ids, 4)
-print(dataset.class_names)
-print(image_ids)
+#print(dataset.class_names)
+#print(image_ids)
 
 for image_id in image_ids:
     image = dataset.load_image(image_id)
@@ -276,7 +276,7 @@ elif init_with == "last":
 #            layers='heads')
 #end_train = time.time()
 #minutes = round((end_train - start_train) / 60, 2)
-#print(f'Training took {minutes} minutes')
+#print('Training took {minutes} minutes')
 
 
 # In[11]:
@@ -293,7 +293,7 @@ model.train(dataset_train, dataset_val,
             layers="all")
 end_train = time.time()
 minutes = round((end_train - start_train) / 60, 2)
-print(f'Training took {minutes} minutes')
+print('Training took {minutes} minutes')
 
 
 # # Prepare to run Inference
