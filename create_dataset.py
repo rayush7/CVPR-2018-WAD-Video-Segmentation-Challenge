@@ -30,7 +30,7 @@ id2category = {}
 for cat, _id in category2id.items():
     id2category[_id] = cat
 
-def create_coco(img_path, label_path, destination, object2color=None, crop_size=None, down_scale=None):
+def create_coco(img_path, label_path, destination, crop_size=None, down_scale=None):
     
     label_path.sort()
     img_path.sort()
@@ -40,11 +40,8 @@ def create_coco(img_path, label_path, destination, object2color=None, crop_size=
     image_list = create_image_list(img_path, crop_size, down_scale)
     
     # create annotation list
-    if object2color is None:
-        print('Creating object2color dictionary...')
-        object2color, class_instance = create_object2color(label_path)
-    else:
-        print('object2color is obtained...')
+    print('Creating object2color dictionary...')
+    object2color, class_instance = create_object2color(label_path)
     category_ids = create_color2category(class_instance, object2color)
     
     is_crowd = 0
