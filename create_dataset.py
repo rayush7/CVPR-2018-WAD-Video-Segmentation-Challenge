@@ -30,17 +30,21 @@ id2category = {}
 for cat, _id in category2id.items():
     id2category[_id] = cat
 
-def create_coco(img_path, label_path, destination, crop_size=None, down_scale=None):
+def create_coco(img_path, label_path, destination, object2color=None, crop_size=None, down_scale=None):
     
     label_path.sort()
     img_path.sort()
     
     # create images list
-    image_list = create_image_list(img_path)
+    print('Creating image list...')
+    image_list = create_image_list(img_path, crop_size, down_scale)
     
     # create annotation list
-    #object2color, class_instance = create_object2color(label_path, id2category)
-    object2color, class_instance = create_object2color(label_path)
+    if object2color is None:
+        print('Creating object2color dictionary...')
+        object2color, class_instance = create_object2color(label_path)
+    else:
+        print('object2color is obtained...')
     category_ids = create_color2category(class_instance, object2color)
     
     is_crowd = 0
@@ -49,13 +53,14 @@ def create_coco(img_path, label_path, destination, crop_size=None, down_scale=No
     annotation_id = 0
 
     # Create the annotations
+    print('Creating annotation list...')
     annotations = []
     for img_id, path in tqdm.tqdm(enumerate(label_path)):
         label = Image.open(path)
         label = np.array(label)
         
-        #if (crop_size is not None) and (down_scale is not None):
-        #    label = resize_label(label, crop_size=crop_size, down_scale=down_scale)
+        if (crop_size is not None) and (down_scale is not None):
+            label = resize_label(label, crop_size=crop_size, down_scale=down_scale)
         
         mask = do_mask_image(label, class_instance[img_id], object2color)
         mask = Image.fromarray(np.uint8(mask))
@@ -70,7 +75,11 @@ def create_coco(img_path, label_path, destination, crop_size=None, down_scale=No
                 continue
             annotations.append(annotation)
             annotation_id += 1
-            
+
+    # Delete images withoud annotation
+    image_list = clean_image_list(image_list, annotations)
+    
+    # Making json
     data = {}
     data['info'] = {}
     data['licenses'] = []
@@ -94,10 +103,10 @@ def create_image_list(img_path, crop_size=None, down_scale=None):
     h = img.height
     w = img.width
     
-    #if (crop_size is not None) and (down_scale is not None):
-    #    img = np.array(img)
-    #    img = resize_image(img, crop_size=crop_size, down_scale=down_scale)
-    #    h, w, _ = img.shape
+    if (crop_size is not None) and (down_scale is not None):
+        img = np.array(img)
+        img = resize_image(img, crop_size=crop_size, down_scale=down_scale)
+        h, w, _ = img.shape
     
     image_list = []
     for img_id, path in enumerate(img_path):
@@ -122,7 +131,7 @@ def create_object2color(label_path):
     for _id in id2category.keys():
         class_summary[_id] = set()
     
-    for img_id, path in enumerate(label_path):
+    for img_id, path in tqdm.tqdm(enumerate(label_path)):
         label = Image.open(path)
         label = np.array(label)
         label_class = np.ndarray.astype(label/1000, np.int32)
@@ -257,3 +266,15 @@ def create_sub_mask_annotation(sub_mask, image_id, category_id, annotation_id, i
     }
 
     return annotation
+
+def clean_image_list(image_list, annotations):
+    useful_id = set()
+    new_image_list = []
+    
+    for annotation in annotations:
+        useful_id.add(annotation['image_id'])
+    for image in image_list:
+        if image['id'] in useful_id:
+            new_image_list += [image]
+    return new_image_list
+    
