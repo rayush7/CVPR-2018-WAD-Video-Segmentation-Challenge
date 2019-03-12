@@ -268,9 +268,11 @@ def clean_image_list(image_list, annotations):
     useful_id = set()
     new_image_list = []
     
-    for annotation in annotations:
+    print('Collecting images id...')
+    for annotation in tqdm.tqdm(annotations):
         useful_id.add(annotation['image_id'])
-    for image in image_list:
+    print('Clearning images id...')
+    for image in tqdm.tqdm(image_list):
         if image['id'] in useful_id:
             new_image_list += [image]
     return new_image_list
