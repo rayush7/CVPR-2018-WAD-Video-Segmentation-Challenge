@@ -5,3 +5,5 @@ This repository contains code for CVPR 2018 Video Segmentation Challenge
 [Result Video](https://www.youtube.com/watch?v=nRgVNnI4-AM)
 
 [Pretrained Mask RCNN Model on MS COCO](https://drive.google.com/file/d/1sYdyGKJcpsh1lxEBEq8bPoeqnkq-bRMM/view?usp=sharing)
+
+[Mask RCNN Model finetuned on WAD Competition Dataset](https://drive.google.com/file/d/1qJh36j-dtNPAd1tmznq885iQ1EFO2p3N/view?usp=sharing)
