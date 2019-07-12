@@ -1,5 +1,5 @@
 # CVPR-2018-WAD-Video-Segmentation-Challenge
-This repository contains code for CVPR 2018 Video Segmentation Challenge  
+This repository contains code for CVPR 2018 Video Segmentation Challenge. This project was done in collaboration with [Kai-Wei Tsou](https://github.com/KWTsou1220)
 
 [Kaggle Competition Link](https://www.kaggle.com/c/cvpr-2018-autonomous-driving)  
 
