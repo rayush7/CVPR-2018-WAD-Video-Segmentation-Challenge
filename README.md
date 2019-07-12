@@ -17,7 +17,8 @@ This repository contains code for CVPR 2018 Video Segmentation Challenge. This p
 [2] [Mask RCNN Model finetuned on WAD Competition Dataset](https://drive.google.com/file/d/1qJh36j-dtNPAd1tmznq885iQ1EFO2p3N/view?usp=sharing)  
 
 #### Report
-[Report](TSOU_RAI_Instance_Level_Object_Segmentation_In_Videos_VIC_Project_Report.pdf)
+[1] [Report](TSOU_RAI_Instance_Level_Object_Segmentation_In_Videos_VIC_Project_Report.pdf)  
+[2] [Slides](TSOU_RAI_Instance_Level_Object_Segmentation_in_Videos_VIC.pdf)
 
 #### Credits
 [1] [Matterport's MaskRCNN Tensorflow Implementation](https://github.com/matterport/Mask_RCNN)  
