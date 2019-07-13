@@ -15,6 +15,8 @@ Evaluation was done on Seven different instance-level annotations, which are
 * Bus
 * Tricycle  
 
+Intersection Over Union was used as the evaluation metric.
+
 #### Results
 
 ![Result Image](Result_Images/44.jpg)  
