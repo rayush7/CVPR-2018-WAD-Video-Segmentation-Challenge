@@ -6,7 +6,14 @@ This repository contains code for CVPR 2018 Video Segmentation Challenge. This p
 [CVPR 2018 Workshop on Autonomous Driving Link](http://wad.ai/)  
 
 #### Dataset and Evaluation
-Evaluation was done on Seven different instance-level annotations, which are car, motorcycle, bicycle, pedestrian, truck, bus, and tricycle.  
+Evaluation was done on Seven different instance-level annotations, which are  
+* Car
+* Motorcycle
+* Bicycle
+* Pedestrian
+* Truck
+* Bus
+* Tricycle  
 
 #### Results
 
