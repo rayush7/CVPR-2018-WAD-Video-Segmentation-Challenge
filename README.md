@@ -26,7 +26,7 @@ Intersection Over Union was used as the evaluation metric.
 #### Pretrained Models
 
 [1] [Pretrained Mask RCNN Model on MS COCO](https://drive.google.com/file/d/1sYdyGKJcpsh1lxEBEq8bPoeqnkq-bRMM/view?usp=sharing)  
-[2] [Mask RCNN Model finetuned on WAD Competition Dataset](https://drive.google.com/file/d/1qJh36j-dtNPAd1tmznq885iQ1EFO2p3N/view?usp=sharing)  
+[2] [Our Mask RCNN Model finetuned on WAD Competition Dataset](https://drive.google.com/file/d/1qJh36j-dtNPAd1tmznq885iQ1EFO2p3N/view?usp=sharing)  
 
 #### Report
 [1] [Report](TSOU_RAI_Instance_Level_Object_Segmentation_In_Videos_VIC_Project_Report.pdf)  
